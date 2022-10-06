@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MockQueryable;
 
 namespace API.Controllers
 {
@@ -19,15 +21,17 @@ namespace API.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task< ActionResult<IEnumerable<AppUser>>>GetUsers()
+        public async Task<ActionResult<IEnumerable<AppUser>>>GetUsers()
+        // public async Task<List<AppUser>> GetAppUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            // return await _context.Users.ToListAsync();
+            return await Task.FromResult(_context.Users.ToList());
             
             
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>>GetUser(int id)
+        public async Task<ActionResult<AppUser>>GetUsers(int id)
         {
             return await _context.Users.FindAsync(id);
     

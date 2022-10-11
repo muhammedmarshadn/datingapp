@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 
@@ -14,7 +16,7 @@ export class NavComponent implements OnInit {
   // LoggedIn:boolean;
   // currentUser$:Observable<User>;
 
-  constructor(public accountservice:AccountService) { }
+  constructor(public accountservice:AccountService,private router:Router,private toastr:ToastrService) { }
 
   ngOnInit(): void {
     // this.getCurrentUser();
@@ -26,16 +28,18 @@ export class NavComponent implements OnInit {
     //observables are collection ofmultiple values over time
     this.accountservice.login(this.model).subscribe(Response=>
       {
-        console.log(Response);
+        this.router.navigateByUrl('/members');
         // this.LoggedIn = true;
       },error=>{
         console.log(error);
+        this.toastr.error(error.error);
       })
       }
 
 
       logout(){
         this.accountservice.logout();
+        this.router.navigateByUrl('/')
         // this.LoggedIn = false;  
       }
 

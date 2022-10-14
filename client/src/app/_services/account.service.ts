@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { pipe, ReplaySubject } from 'rxjs';
 import {map} from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
 //this services can be injected into other components or services 
@@ -13,7 +14,7 @@ import { User } from '../_models/user';
 })
 export class AccountService {
   //= to set prop to something,: to make it type of something
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
 
   private currentUserSource = new ReplaySubject<User>(1);  //ReplaySubject:like buffer obj ,store value and anytime subscriber subscribe it emits last value in it //(1) is the size of it
   currentUser$ = this.currentUserSource.asObservable();   // $ make it an observbl

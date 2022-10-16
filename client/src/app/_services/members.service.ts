@@ -18,7 +18,8 @@ const httpOptions = {
 })
 export class MembersService {
   baseUrl = environment.apiUrl;
-  members: Member[]=[];
+  members: Member[]=[];             //services are singleton they will remain until api closes .
+                                     //so if we store data in services we can access them without making an api call
 
   constructor(private http:HttpClient) { }
 
@@ -46,5 +47,15 @@ export class MembersService {
         this.members[index]= member;
       })
     )
+  }
+
+  setMainPhoto(photoId: number)
+  {
+    return this.http.put(this.baseUrl +'users/set-main-photo/'+photoId,{});
+  }
+
+  deletePhoto(photoId:number)
+  {
+    return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 }

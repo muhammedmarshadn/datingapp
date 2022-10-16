@@ -13,7 +13,7 @@ import { MembersService } from 'src/app/_services/members.service';
   styleUrls: ['./member-edit.component.css']
 })
 export class MemberEditComponent implements OnInit {
-  @ViewChild('editForm')editForm:NgForm;
+  @ViewChild('editForm')editForm:NgForm;                //access form itself inside our component
   Member:Member;
   user:User;
   @HostListener('window:beforeunload',['$event'])UnloadNotification($event:any){     //access brwsr event

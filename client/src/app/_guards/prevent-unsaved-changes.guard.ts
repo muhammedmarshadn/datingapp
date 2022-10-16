@@ -6,7 +6,7 @@ import { MemberEditComponent } from '../members/member-edit/member-edit.componen
 @Injectable({
   providedIn: 'root'
 })
-export class PreventUnsavedChangesGuard implements CanDeactivate<unknown> {
+export class PreventUnsavedChangesGuard implements CanDeactivate<unknown> {           //prevent user exiting without saving changes
   canDeactivate(component: MemberEditComponent): boolean{
     if(component.editForm.dirty){
       return confirm('are you sure you want to continue? any unsaved changes will be lost');

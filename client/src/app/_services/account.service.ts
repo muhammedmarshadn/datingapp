@@ -28,8 +28,8 @@ export class AccountService {
       map((response:User)=>{                                               //map = to transform some data in someway or select parts of data 
         const user=response;
         if(user){
-          localStorage.setItem('user',JSON.stringify(user));
-          this.currentUserSource.next(user);                                    //setting current user getback from the api
+          
+          this.setCurrentUser(user);                                   //setting current user getback from the api
         }
       })
     )
@@ -39,8 +39,7 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/register',model).pipe(
       map((user:User) =>{
         if(user){
-          localStorage.setItem('user',JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
         }
         return user;
       })
@@ -48,6 +47,7 @@ export class AccountService {
   }
 
   setCurrentUser(user:User){                //helper method for setting current user,pass in user
+    localStorage.setItem('user',JSON.stringify(user));
     this.currentUserSource.next(user);
   }
 

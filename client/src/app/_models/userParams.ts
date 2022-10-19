@@ -1,0 +1,14 @@
+import { User } from "./user";
+
+export class UserParams{
+    gender:string;
+    minAge=15;
+    maxAge=99;
+    pageNumber=1;
+    pageSize=18;
+    OrderBy='lastActive';
+
+    constructor(user:User){
+        this.gender =user.gender ==='female'?'male':'female';
+    }
+}

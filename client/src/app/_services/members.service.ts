@@ -23,32 +23,32 @@ const httpOptions = {
 export class MembersService {
   baseUrl = environment.apiUrl;
   memberCache = new Map();
-  user:User;
-  userParams:UserParams;
+  user: User;
+  userParams: UserParams;
   members: Member[] = [];             //services are singleton they will remain until api closes .
-                                     //so if we store data in services we can access them without making an api call
+  //so if we store data in services we can access them without making an api call
 
-  constructor(private http: HttpClient,private accountService:AccountService) { 
+  constructor(private http: HttpClient, private accountService: AccountService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => {
       this.user = user;
       this.userParams = new UserParams(user);
     })
   }
-  getUserParams(){
-    return  this.userParams;
+  getUserParams() {
+    return this.userParams;
   }
-  setUserParams(params:UserParams){
+  setUserParams(params: UserParams) {
     this.userParams = params;
   }
 
-  resetUserParams(){
+  resetUserParams() {
     this.userParams = new UserParams(this.user);
     return this.userParams;
   }
 
   getMembers(userParams: UserParams) {
     var response = this.memberCache.get(Object.values(userParams).join('-'));
-    if(response){
+    if (response) {
       return of(response);
     }
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
@@ -60,18 +60,18 @@ export class MembersService {
 
 
     return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)
-    .pipe(map(response=>{
-      this.memberCache.set(Object.values(userParams).join('-'),response)
-      return response;
-    }))
+      .pipe(map(response => {
+        this.memberCache.set(Object.values(userParams).join('-'), response)
+        return response;
+      }))
   }
 
   getMember(username: string) {
     const member = [...this.memberCache.values()]
-    .reduce((arr,elem)=>arr.concat(elem.result),[])
-    .find((member:Member)=>member.username === username);
+      .reduce((arr, elem) => arr.concat(elem.result), [])
+      .find((member: Member) => member.username === username);
 
-    if(member){
+    if (member) {
       return of(member);
     }
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
@@ -94,9 +94,18 @@ export class MembersService {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
 
-  private getPaginatedResult<T>(url, params)
-  {
+  getLikes(predicate: string,pageNumber,pageSize) {
+    let params = this.getPaginationHeaders(pageNumber,pageSize)
+    params = params.append('predicate',predicate);
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'likes',params);
+  }
+
+
+  private getPaginatedResult<T>(url, params) {
     const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
     return this.http.get<T>(url, { observe: 'response', params }).pipe(
       map(response => {
@@ -109,8 +118,7 @@ export class MembersService {
     );
   }
 
-  private getPaginationHeaders(pageNumber: number, pageSize: number) 
-  {
+  private getPaginationHeaders(pageNumber: number, pageSize: number) {
     let params = new HttpParams();
 
     params = params.append('pageNumber', pageNumber.toString());

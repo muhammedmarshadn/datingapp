@@ -30,7 +30,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }
                 throw modalStateErrors.flat();  //flat -flatten array
               } else if(typeof(error.error)==='object') {
-                this.toastr.error(error.statusText, error.status);
+                this.toastr.error(error.statusText==="OK"?"BAd request":error.statusText, error.status);
               }else{
                 this.toastr.error(error.error,error.status);
               }

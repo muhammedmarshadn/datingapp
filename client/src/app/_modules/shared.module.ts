@@ -26,6 +26,8 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
     
+  
+    
     
   ],
   exports:[
@@ -37,6 +39,8 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
     BsDatepickerModule,
     PaginationModule,
     ButtonsModule,
+  
+    
 
     
     

@@ -75,7 +75,7 @@ namespace API.Data
 
             var unreadMessages = messages.Where(m=>m.DateRead == null
             && m.Recipient.UserName == currentUsername).ToList();
-
+ 
             if(unreadMessages.Any())
             {
                 foreach(var message in unreadMessages)

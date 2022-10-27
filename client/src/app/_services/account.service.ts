@@ -4,6 +4,7 @@ import { pipe, ReplaySubject } from 'rxjs';
 import {map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
+import { PresenceService } from './presence.service';
 
 //this services can be injected into other components or services 
 //angular services are singleton(this will stay initialized until our app is disposed off)
@@ -21,7 +22,7 @@ export class AccountService {
 
 
   //inject HttpClient into accountservice
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private presence:PresenceService) { }
 
   login(model:any){
     return this.http.post(this.baseUrl + 'account/login',model).pipe(      //pipe = we get a observeable back from httpget req
@@ -30,6 +31,7 @@ export class AccountService {
         if(user){
           
           this.setCurrentUser(user);                                   //setting current user getback from the api
+          this.presence.createHubConnection(user);                     //strtng hubcnnctn when log in
         }
       })
     )
@@ -40,6 +42,8 @@ export class AccountService {
       map((user:User) =>{
         if(user){
           this.setCurrentUser(user);
+          this.presence.createHubConnection(user);                     //strtng hubcnnctn when reg
+
         }
         return user;
       })
@@ -57,7 +61,9 @@ export class AccountService {
 logout(){
   localStorage.removeItem('user');
   this.currentUserSource.next(null);      //persisting login
+  this.presence.stopHubConnection();      //stop hubcnctn
 }
+
 
 getDecodedToken(token){
   return JSON.parse(atob(token.split('.')[1]))

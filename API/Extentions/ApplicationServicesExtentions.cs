@@ -20,11 +20,9 @@ namespace API.Extentions
                                                         // deos hav prblm with scalablity, vast no.of users acccessing it
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenServices>();
-            services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPhotoService,PhotoService>();
             services.AddScoped<LogUserActivity>();
-            services.AddScoped<ILikesRepository,LikesRepository>();
-            services.AddScoped<IMessageRepository,MessageRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddDbContext<DataContext>(options =>
             {

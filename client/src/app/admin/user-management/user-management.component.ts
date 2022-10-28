@@ -31,7 +31,7 @@ export class UserManagementComponent implements OnInit {
         user,
         roles : this.getRolesArray(user)
       }
-   }
+    }
     this.bsModalRef = this.modalService.show(RoleModalComponent,config);
     this.bsModalRef.content.updateSelectedRoles.subscribe(values =>{
       const rolesToUpdate = {

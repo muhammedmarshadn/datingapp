@@ -41,6 +41,16 @@ namespace API.Data
             .SingleOrDefaultAsync(x => x.UserName == username);
         }
 
+          public async Task<AppUser> GetUserByPhotoId(int photoId)
+        {
+            return await _context.Users
+                    .Include(p=>p.Photos)
+                    .IgnoreQueryFilters()
+                    .Where(u=>u.Photos.Any(x=>x.Id == photoId))
+                    .FirstOrDefaultAsync();     
+        }
+
+
         
 
         public void Update(AppUser user)
@@ -71,19 +81,23 @@ namespace API.Data
 
         }
 
-        public async Task<MemberDto> GetMemberAsync(string username)
-        {
-            return await _context.Users.Where(x => x.UserName == username)
-                .Where(x => x.UserName == username)
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync();
-        }
-
         public async Task<string> GetUserGender(string username)
         {
             return await _context.Users
                     .Where(x=>x.UserName == username)   // checking username
                     .Select(x=>x.Gender).FirstOrDefaultAsync(); // return gender from user
+        }
+
+        public async Task<MemberDto> GetMemberAsync(string username, bool IsCurrentUser)
+        {
+            var query =_context.Users
+                .Where(x => x.UserName == username)
+                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+            if(IsCurrentUser) query= query.IgnoreQueryFilters();  // ignore the queryFILTRS for current user
+
+            return await query.FirstOrDefaultAsync();
         }
     }
 }

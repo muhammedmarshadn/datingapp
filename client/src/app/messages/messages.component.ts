@@ -36,7 +36,7 @@ export class MessagesComponent implements OnInit {
     this.confirmService.confirm('confirm delete message','changes cannot be undone').subscribe(result=>{   //modal before deleting
       if(result){                                                           // if true delete msg
         this.messageService.deleteMessage(id).subscribe(()=>{
-          this.messages.splice(this.messages.findIndex(m=>m.id,1));
+          this.messages.splice(this.messages.findIndex(m=>m.id),1);
         })
       }
     })

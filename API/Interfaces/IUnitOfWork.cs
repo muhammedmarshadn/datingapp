@@ -10,6 +10,7 @@ namespace API.Interfaces
         IUserRepository userRepository{get; }
         IMessageRepository messageRepository{get;}
         ILikesRepository likesRepository{get; }
+        IPhotoRepository PhotoRepository{get; }
         Task<bool> Complete();  //method to save all changes
         bool HasChanges();  // to see if entityframework haschanges 
     }

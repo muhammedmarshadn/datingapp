@@ -58,8 +58,10 @@ namespace API.Controllers
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUsers(string username)
         {
+            var currentUsername = User.GetUsername();
 
-            return await _unitOfWork.userRepository.GetMemberAsync(username);
+            return await _unitOfWork.userRepository
+                        .GetMemberAsync(username,IsCurrentUser : currentUsername == username);
 
         }
 
@@ -89,7 +91,8 @@ namespace API.Controllers
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId
             };
-            if (user.Photos.Count == 0)
+            
+            if (user.Photos.Count == 0 && photo.IsApproved)
             {
                 photo.IsMain = true;
             }
@@ -127,7 +130,8 @@ namespace API.Controllers
         [HttpDelete("delete-photo/{photoId}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
-            var user = await _unitOfWork.userRepository.GetUserbyUsernameAsync(User.GetUsername());
+            var user = await _unitOfWork.userRepository.GetUserByPhotoId(photoId);
+            if(user.UserName != User.GetUsername()) return Unauthorized("you cannot delete this photo");
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 

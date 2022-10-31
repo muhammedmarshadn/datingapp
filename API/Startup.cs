@@ -80,11 +80,15 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseDefaultFiles();      // serve index.html // telling api server to use static files
+            app.UseStaticFiles();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<PresenceHub>("hubs/presence");
                 endpoints.MapHub<MessageHub>("hubs/message");
+                endpoints.MapFallbackToController("Index","FallBack");  //wherto fallback to
             });
         }
     }
